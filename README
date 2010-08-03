@@ -1,0 +1,11 @@
+## Basic WSGI Handler for Mongrel2
+
+By: berry.groenendijk@gmail.com
+Date: 3 August 2010
+
+This is a very basic WSGI Handler for Mongrel2 (http://mongrel2.org/home). It is based on SimpleHandler from de wsgi reference implementation in Python 2.6 or higher.
+
+The currently handles a couple of simple WSGI application. It also handles a demo Django WSGI application, see http://github.com/berry/Django-demo.
+
+Known issues:
+- this wsgi handler currently doesn't support chunked responses. I haven't figured out yet how to do this.
