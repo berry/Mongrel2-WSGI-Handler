@@ -69,9 +69,6 @@ def wsgi_server(application):
             pass
         environ['wsgi.input'] = req.body
         
-        print "REQ.BODY: %r" % req.body
-        print "dir(req): %r" % dir(req)
-                
         if DEBUG: print "ENVIRON: %r\n" % environ
         
         # SimpleHandler needs file-like stream objects
