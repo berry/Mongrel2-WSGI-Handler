@@ -9,5 +9,7 @@ The code currently handles a couple of simple WSGI application. It also handles 
 
 Known issues:
 - this wsgi handler currently doesn't support chunked responses. I haven't figured out yet how to do this.
-- the handler does not handle query strings correctly right now. Still have to fix and test this.
 - Using the Django demo app I get some strange HTML parsing errors in Chrome. It says "Extra <html> encountered...". Which leads to a couple a follow up parsing errors. It apparently has something to do with unicode and a BOM being present in the response data. Strange.
+
+Fixed issues:
+- [FIXED 4 aug 2010] the handler does not handle query strings correctly right now. Still have to fix and test this.

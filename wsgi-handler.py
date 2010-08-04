@@ -63,6 +63,10 @@ def wsgi_server(application):
         environ['SERVER_PORT'] = environ['Host'].split(':')[1]       
         environ['SCRIPT_NAME'] = '' # empty for now
         environ['PATH_INFO'] = environ['PATH']
+        if '?' in environ['URI']:
+            environ['QUERY_STRING'] = environ['URI'].split('?')[1]
+        else:
+            environ['QUERY_STRING'] = ''
         try:
             environ['CONTENT_LENGTH'] = environ['Content-Length'] # necessary for POST to work with Django
         except:
@@ -99,8 +103,11 @@ def wsgi_server(application):
         conn.reply_http(req, data, code = code, status = status, headers = headers)
 
 if __name__ == "__main__":
+    
+    # Simple WSGI application
     simple_application = simple_app
 
+    # Simple WSGI application with utf-8 response
     simple_utf8_application = simple_app_utf8
     
     # WSGI Test page
@@ -115,7 +122,7 @@ if __name__ == "__main__":
     import django.core.handlers.wsgi
     django_application = django.core.handlers.wsgi.WSGIHandler()
     
-    # Start application
+    # Start WSGI application
     # wsgi_server(simple_application)
     # wsgi_server(simple_utf8_application)
     # wsgi_server(wsgi_test_application)
