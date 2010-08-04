@@ -43,7 +43,7 @@ def wsgi_server(application):
     A WSGI application should return a iterable op StringTypes. 
     Any encoding must be handled by the WSGI application itself.
     '''
-    
+
     while True:
         if DEBUG: print "WAITING FOR REQUEST"
         
