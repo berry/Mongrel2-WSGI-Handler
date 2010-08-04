@@ -9,3 +9,4 @@ The code currently handles a couple of simple WSGI application. It also handles 
 
 Known issues:
 - this wsgi handler currently doesn't support chunked responses. I haven't figured out yet how to do this.
+- the handler does not handle query strings correctly right now. Still have to fix and test this.
