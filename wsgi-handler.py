@@ -43,7 +43,7 @@ def wsgi_server(application):
     A WSGI application should return a iterable op StringTypes. 
     Any encoding must be handled by the WSGI application itself.
     '''
-
+    
     while True:
         if DEBUG: print "WAITING FOR REQUEST"
         
@@ -92,6 +92,13 @@ def wsgi_server(application):
         headers = dict([r.split(": ") for r in response[1:-2]])
         code = response[0][9:12]
         status = response[0][13:]
+        
+        # strip BOM's from response data
+        # Especially the WSGI handler from Django seems to generate them (2 actually, huh?)
+        # a BOM isn't really necessary and cause HTML parsing errors in Chrome and Safari
+        # See also: http://www.xs4all.nl/~mechiel/projects/bomstrip/
+        # Although I still find this a ugly hack.
+        data = data.replace('\xef\xbb\xbf', '')
         
         # Get the generated errors
         errors = errIO.getvalue()

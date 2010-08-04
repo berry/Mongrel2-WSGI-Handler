@@ -33,6 +33,7 @@ except NameError:
     __file__ = '?'
 
 html_template = u"""\
+<!DOCTYPE html>
 <html>
 <head>
  <title>WSGI Test Script</title>
