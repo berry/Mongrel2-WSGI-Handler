@@ -59,8 +59,12 @@ def wsgi_server(application):
         # Set a couple of environment attributes that are a must according to PEP 333
         environ['SERVER_PROTOCOL'] = u'HTTP/1.1' # SimpleHandler expects a server_protocol
         environ['REQUEST_METHOD'] = environ['METHOD']
-        environ['SERVER_NAME'] = environ['Host'].split(':')[0]
-        environ['SERVER_PORT'] = environ['Host'].split(':')[1]       
+        if ':' in environ['Host']:
+            environ['SERVER_NAME'] = environ['Host'].split(':')[0]
+            environ['SERVER_PORT'] = environ['Host'].split(':')[1]
+        else:
+            environ['SERVER_NAME'] = environ['Host']
+            environ['SERVER_PORT'] = '80'
         environ['SCRIPT_NAME'] = '' # empty for now
         environ['PATH_INFO'] = environ['PATH']
         if '?' in environ['URI']:
