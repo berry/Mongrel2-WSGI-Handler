@@ -9,7 +9,7 @@ main = Server(
     chroot = "./",
     pid_file = "/run/mongrel2-wsgi.pid",
     default_host = HOST,
-    port = 6767
+    port = 80
     )
     
 handler_wsgi = Handler(send_spec = 'tcp://127.0.0.1:9997',

@@ -61,7 +61,7 @@ def application(environ, start_response):
     """ The WSGI test application """
     # emit status / headers
     status = "200 OK"
-    headers = [('Content-Type', 'text/html'), ]
+    headers = [('Content-Type', 'text/html;charset=utf-8'), ]
     start_response(status, headers)
 
     # assemble and return content
@@ -71,7 +71,7 @@ def application(environ, start_response):
         'abs_path': os.path.abspath('.'),
         'filename': __file__,
         'python_path': repr(sys.path),
-        'wsgi_env': '\n'.join([row_template % item for item in environ.items()]),
+        'wsgi_env': '\n'.join([row_template % item for item in sorted(environ.items())]),
     }
     return [content.encode('utf-8')]
 
