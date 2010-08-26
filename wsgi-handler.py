@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import os, sys
+import urllib
 from uuid import uuid4
 
 from mongrel2 import handler
@@ -79,7 +80,11 @@ def wsgi_server(application):
             environ['SERVER_NAME'] = environ['Host']
             environ['SERVER_PORT'] = ''
         environ['SCRIPT_NAME'] = '' # empty for now
-        environ['PATH_INFO'] = environ['PATH']
+		# 26 aug 2010: Apparently Mongrel2 has started (around 1.0beta1) to quote urls and
+		# apparently Django isn't expecting an already quoted string. So, I just
+		# unquote the path_info here again so Django doesn't throw a "page not found" on 
+		# urls with spaces and other characters in it.
+        environ['PATH_INFO'] = urllib.unquote(environ['PATH'])
         if '?' in environ['URI']:
             environ['QUERY_STRING'] = environ['URI'].split('?')[1]
         else:
