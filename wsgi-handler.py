@@ -13,12 +13,15 @@ try:
 except:
     import StringIO
 
-DEBUG = False
+DEBUG = True
 
 # setup connection handler
 # sender_id is automatically generated 
 # so that each handler instance is uniquely identified
-conn = handler.Connection(str(uuid4()), 
+
+sender_id = str(uuid4())
+#sender_id = 'd2666adc-c74c-4611-a565-322db9535c9e'
+conn = handler.Connection(sender_id, 
         "tcp://127.0.0.1:9997",
         "tcp://127.0.0.1:9996")
 
@@ -103,13 +106,37 @@ def wsgi_server(application):
         # Get the response and filter out the response (=data) itself,
         # the response headers, 
         # the response status code and the response status description
-        response = respIO.getvalue()
-        response = response.split("\r\n")
-        data = response[-1]
-        headers = dict([r.split(": ") for r in response[1:-2]])
-        code = response[0][9:12]
-        status = response[0][13:]
-        
+        # While walking the response 
+	# rpos holds the position in the response
+	# we are currently reading
+	# 0 = reading response hasn't started yet
+	# 1 = reading the protocol and the response status
+	# 2 = reading the headers
+	# 3 = reading the response data
+	
+	rpos = 0
+	headers = []
+	data = []
+	response = respIO.getvalue()
+	for line in response.splitlines():
+		if rpos == 0 and 'HTTP' in line:
+			rpos = 1
+			splitline = line.split(" ")
+			code = splitline[1]
+			status = "".join(splitline[2:])
+		if rpos in [1,2] and ": " in line:
+			rpos = 2
+			headers.append(line)
+		if rpos == 2 and line == "":
+			# after the headers there is an empty line
+			# all data after the empty line is response data
+			# so set rpos to 3 but ignore the empty line
+			rpos = 3
+		if rpos == 3:
+			data.append(line)
+	headers = dict([r.split(": ") for r in headers])
+	data = "".join(data)
+
         # strip BOM's from response data
         # Especially the WSGI handler from Django seems to generate them (2 actually, huh?)
         # a BOM isn't really necessary and cause HTML parsing errors in Chrome and Safari
@@ -140,13 +167,18 @@ if __name__ == "__main__":
     wsgi_test_application = test_wsgi_app.application
     
     # Django demo app
-    sys.path.append('/home/berry/git/django/')
+    # sys.path.append('/home/berry/git/django/')
+    # sys.path.append('/home/berry/git/')
+    # os.environ['DJANGO_SETTINGS_MODULE'] = 'djangodemo.settings'
+   
+    # MyDjango app
+    sys.path.append('/home/berry/svnworkingfolders/django/trunk/')
     sys.path.append('/home/berry/git/')
-    os.environ['DJANGO_SETTINGS_MODULE'] = 'djangodemo.settings'
-    
+    os.environ['DJANGO_SETTINGS_MODULE'] = 'MyDjango.settings'
+ 
     import django.core.handlers.wsgi
-    django_application = django.core.handlers.wsgi.WSGIHandler()
-    
+    django_application = django.core.handlers.wsgi.WSGIHandler()   
+
     # Start WSGI application
     # wsgi_server(simple_application)
     # wsgi_server(simple_utf8_application)

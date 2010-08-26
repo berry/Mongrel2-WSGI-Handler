@@ -21,7 +21,8 @@ wsgitest = Host(name = HOST, routes = {
     r'/': handler_wsgi,
     })
 
-main.hosts = [wsgitest]
+main.hosts.add(wsgitest)
+#main.hosts = [wsgitest]
 
 settings = {"zeromq.threads": 4}
 
